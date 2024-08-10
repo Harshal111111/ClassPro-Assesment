@@ -1,0 +1,17 @@
+<h1><%= @student.name %></h1>
+<%= link_to 'New Installment Plan', new_student_installment_plan_path(@student) %>
+<h2>Installment Plans</h2>
+<% @installment_plans.each do |plan| %>
+  <div>
+    <h3>Total Amount: INR <%= (plan.total_amount) %></h3>
+    <h4>Installments:</h4>
+    <ul>
+      <% plan.installments.each_with_index do |amount, index| %>
+        <li>
+          Installment <%= index + 1 %>: INR <%= (amount) %>
+          <%= link_to 'Make Payment', new_student_installment_plan_payment_path(@student, plan, installment_index: index) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

@@ -1,0 +1,12 @@
+<h1>New Installment Plan for <%= @student.name %></h1>
+<%= form_with(model: [@student, @installment_plan], local: true) do |f| %>
+  <div>
+    <%= f.label :total_amount %>
+    <%= f.number_field :total_amount, step: 0.01 %>
+  </div>
+  <div>
+    <%= f.label :number_of_installments %>
+    <%= f.number_field :number_of_installments %>
+  </div>
+  <%= f.submit 'Create Installment Plan' %>
+<% end %>

@@ -1,0 +1,17 @@
+<h1>Make Payment for <%= @student.name %></h1>
+<h2>Installment <%= params[:installment_index].to_i + 1 %></h2>
+<%= form_with(model: [@student, @installment_plan, @payment], local: true) do |f| %>
+  <%= f.hidden_field :installment_index, value: params[:installment_index] %>
+  <div>
+    <%= f.label :amount %>
+    <%= f.number_field :amount, step: 0.01 %>
+  </div>
+  <div>
+    <p>If payment is less than the installment amount:</p>
+    <%= radio_button_tag :action_type, 'add_to_next' %>
+    <%= label_tag :action_type_add_to_next, "Add to next installment" %>
+    <%= radio_button_tag :action_type, 'create_new' %>
+    <%= label_tag :action_type_create_new, "Create new installment" %>
+  </div>
+  <%= f.submit 'Make Payment' %>
+<% end %>
