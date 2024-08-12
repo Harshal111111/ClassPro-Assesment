@@ -1,17 +1,19 @@
 class PaymentsController < ApplicationController
+  before_action :set_student
+  before_action :set_installment_plan
+
   def new
-    @student = Student.find(params[:student_id])
-    @installment_plan = @student.installment_plans.find(params[:installment_plan_id])
     @payment = @installment_plan.payments.new
   end
 
   def create
-    @student = Student.find(params[:student_id])
-    @installment_plan = @student.installment_plans.find(params[:installment_plan_id])
     @payment = @installment_plan.payments.new(payment_params)
     @payment.student = @student
 
-    if @payment.save
+    if @payment.amount > @installment_plan.remaining_balance
+      flash.now[:alert] = "Payment amount cannot exceed the remaining balance."
+      render :new
+    elsif @payment.save
       handle_payment
       redirect_to @student, notice: 'Payment was successfully processed.'
     else
@@ -20,6 +22,13 @@ class PaymentsController < ApplicationController
   end
 
   private
+  def set_student
+    @student = Student.find(params[:student_id])
+  end
+
+  def set_installment_plan
+    @installment_plan = @student.installment_plans.find(params[:installment_plan_id])
+  end
 
   def payment_params
     params.require(:payment).permit(:amount, :installment_index)
